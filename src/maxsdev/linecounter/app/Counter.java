@@ -2,11 +2,18 @@ package maxsdev.linecounter.app;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.Scanner;
 
 public class Counter {
 
+    HashMap<String, Integer> map;
+    Path homePath;
+
     public Counter() {
+        map = new HashMap<>();
     }
 
     private int getLinesCountInFile(File file) throws FileNotFoundException {
@@ -16,6 +23,7 @@ public class Counter {
             String line = scanner.nextLine();
             if(!line.equals("")) count++;
         }
+        map.put(homePath.relativize(file.toPath()).toString(), count);
         return count;
     }
 
@@ -39,6 +47,11 @@ public class Counter {
         if(!file.isFile() && !file.isDirectory()){
             throw new FileNotFoundException("No such file or directory.");
         }
+        homePath = Paths.get(path);
         return fileBypass(file);
+    }
+
+    public HashMap<String, Integer> getMap() {
+        return map;
     }
 }
